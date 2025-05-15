@@ -353,8 +353,31 @@ html, body, #root {
 
 /* Responsive scaling for smaller screens */
 @media (max-width: 768px) {
+  /* Make sidebar stack on top of content */
+  .presentation-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%; /* Full width when stacked */
+    height: auto; /* Adjust height to content or a fixed max-height */
+    max-height: 200px; /* Example max height for a stacked sidebar */
+    border-right: none; /* Remove side border */
+    border-bottom: 1px solid #333; /* Add bottom border */
+    flex-shrink: 1; /* Allow sidebar to shrink if content is too large */
+  }
+
+  .presentation-content {
+    overflow-y: auto; /* Ensure content can scroll if sidebar takes too much space */
+  }
+
   .slide-active {
-    max-width: 95%; /* Allow slightly more width on smaller screens */
+    /* Remove this max-width, as JS handles scaling of fixed-size element.
+       The inline style width: 1024px on slide-active should be respected.
+       If this max-width: 95% is smaller than the scaled 1024px, it might cause issues.
+       The scaling logic in JS should be the sole source of truth for the slide's apparent size.
+    */
+    /* max-width: 95%; */ /* Allow slightly more width on smaller screens */
   }
   
   .slide-nav-button {
