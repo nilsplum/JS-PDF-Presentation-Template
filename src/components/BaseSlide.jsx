@@ -57,7 +57,6 @@ function BaseSlide({
       marginTop: '60px', // Match header height
       marginBottom: '40px', // Match footer height
       flex: 1,
-      padding: '50px',
       position: 'relative', // Changed from relative
       overflow: 'hidden',
       display: 'flex',

@@ -2,19 +2,23 @@ import React from 'react';
 
 function Slide1() {
   return (
-    <>
-      <p className="text-xl mt-0 mb-4">
-        This is a simple presentation tool built with React and Vite.
+    <div className="flex flex-col items-center justify-center h-full text-center p-10">
+      <h1 className="text-5xl font-bold mb-8 text-blue-600">Welcome to Our Presentation!</h1>
+      <p className="text-2xl mt-0 mb-6 text-gray-700">
+        Discover a seamless presentation experience powered by modern web technologies.
       </p>
-      <p className="text-lg mb-4">
-        You can navigate using the buttons beside the slide or the arrow keys.
+      <p className="text-xl mb-6 text-gray-600">
+        Navigate with ease using the on-screen controls or your keyboard's arrow keys.
       </p>
-      <ul className="list-disc list-inside mb-0 text-lg">
-        <li>Slide 1: Introduction (You are here)</li>
-        <li>Slide 2: Features</li>
-        <li>Slide 3: PDF Export</li>
-      </ul>
-    </> 
+      <div className="mt-4">
+        <h2 className="text-3xl font-semibold mb-4 text-blue-500">What's Inside?</h2>
+        <ul className="list-none p-0 text-lg text-gray-700 space-y-2">
+          <li className="bg-gray-100 p-3 rounded-lg shadow-sm">Slide 1: Welcome! (You are here)</li>
+          <li className="bg-gray-100 p-3 rounded-lg shadow-sm">Slide 2: Key Features Explored</li>
+          <li className="bg-gray-100 p-3 rounded-lg shadow-sm">Slide 3: Easy PDF Export</li>
+        </ul>
+      </div>
+    </div>
   );
 }
 
