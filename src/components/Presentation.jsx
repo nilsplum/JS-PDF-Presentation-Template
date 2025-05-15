@@ -7,32 +7,30 @@ import BaseSlide from './BaseSlide';
 import jsPDF from 'jspdf';
 // html2canvas import is already removed if we are using jsPDF.html()
 
+// Define the global footer content
+const globalFooterContent = (
+  <>
+    <p style={{ margin: 0, display: 'inline' }}>© 2024 Your Presentation Title</p>
+    {/* Add more custom HTML/JSX for your footer here */}
+  </>
+);
+
 // Define slide data directly in Presentation.jsx
 const slidesData = [
   {
     title: 'Welcome to the Presentation',
     component: () => import('../slides/Slide1.jsx'),
-    // footerContent can be omitted to use BaseSlide's default
+    // footerContent removed
   },
   {
     title: 'Core Features',
     component: () => import('../slides/Slide2.jsx'),
-    footerContent: <p style={{ fontSize: '0.8em', color: '#888' }}>Powered by React & jsPDF</p>
+    // footerContent removed
   },
   {
     title: 'PDF Export Example',
     component: () => import('../slides/Slide3.jsx'),
-    footerContent: (
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-        <img src="https://via.placeholder.com/80x30.png?text=Logo" alt="Company Logo" style={{ height: '25px' }} />
-        <button 
-          onClick={() => alert('Footer Button Clicked!')} 
-          style={{ padding: '3px 8px', fontSize: '0.8em', backgroundColor: '#555', color: 'white', border: 'none', borderRadius: '3px' }}
-        >
-          Action
-        </button>
-      </div>
-    )
+    // footerContent removed
   }
 ];
 
@@ -277,7 +275,7 @@ function Presentation() {
                       // Only pass the specific title for this slide
                       <BaseSlide
                         title={slideDisplayData.title || `Slide ${index + 1}`}
-                        footerContent={slideDisplayData.footerContent}
+                        footerContent={globalFooterContent} // Pass the global footer content
                         // backgroundColor, titleColor, textColor are NOT passed
                         // They will come from BaseSlide's defaultProps
                       >

@@ -11,6 +11,7 @@ The core idea is that slide content is primarily HTML, making it easy for langua
 
 -   **Simple Slide Creation**: Slides are React components returning HTML content.
 -   **Unified Styling**: A `BaseSlide` component provides default styling (dark theme by default) including background, text colors, title formatting, and a footer.
+-   **Tailwind CSS Integration**: Utility classes from Tailwind CSS are available for styling content within slides.
 -   **Dynamic Loading**: Slides are loaded dynamically, making the presentation extensible.
 -   **Navigation**: Supports keyboard (arrow keys) and on-screen button navigation.
 -   **Sidebar Overview**: A sidebar lists all slides for quick navigation.
@@ -49,10 +50,10 @@ To add a new slide to your presentation, follow these steps:
 
 1.  **Create the Slide Content Component:**
     Create a new `.jsx` file in the `src/slides/` directory (e.g., `src/slides/SlideNew.jsx`). This component should export a default React function that returns the HTML content for your slide.
-    The content should be structured as if it's going into the main body of a slide; the title and footer are handled by the `BaseSlide` wrapper.
-    **Note on Spacing**: The `BaseSlide` component provides a default padding around the main content area. To ensure your slide content sits neatly within this padding without extra gaps, it's recommended to make the first root-level element in your slide component have `marginTop: 0` and the last root-level element have `marginBottom: 0` using inline styles. See the example below.
+    The content should be structured as if it's going into the main body of a slide. The slide title is handled by the `BaseSlide` wrapper, and the common footer for all slides is now defined globally in `src/components/Presentation.jsx`. You can use standard HTML tags and apply styling using Tailwind CSS utility classes directly on your elements.
+    **Note on Spacing**: The `BaseSlide` component provides a default padding around the main content area. To ensure your slide content sits neatly within this padding without extra gaps, it's recommended to make the first root-level element in your slide component have `marginTop: 0` (or `mt-0` with Tailwind) and the last root-level element have `marginBottom: 0` (or `mb-0` with Tailwind) using inline styles or Tailwind classes. See the example below.
 
-    *Example `src/slides/SlideNew.jsx`:*
+    *Example `src/slides/SlideNew.jsx` (using Tailwind for margins):*
     ```jsx
     // src/slides/SlideNew.jsx
     import React from 'react';
@@ -60,15 +61,15 @@ To add a new slide to your presentation, follow these steps:
     function SlideNew() {
       return (
         <>
-          <h3 style={{ marginTop: 0 }}>This is the Sub-heading for My New Slide</h3>
-          <p>This is the first paragraph of my new slide. You can use standard HTML tags.</p>
-          <ul>
+          <h3 className="mt-0 text-xl font-semibold">This is My New Slide</h3>
+          <p>This is the first paragraph, styled with Tailwind if desired.</p>
+          <ul className="list-disc list-inside">
             <li>Point one</li>
             <li>Point two</li>
           </ul>
           {/* Add animations by applying CSS classes defined in styles.css */}
           <p className="your-custom-animation-class">Animated text!</p>
-          <p style={{ marginBottom: 0 }}>Another paragraph with <code>inline code</code> if needed.</p>
+          <p className="mb-0">Another paragraph with <code className="bg-gray-200 text-gray-800 px-1 rounded">inline code</code> if needed.</p>
         </>
       );
     }
@@ -116,9 +117,9 @@ To add a new slide to your presentation, follow these steps:
 
 ### Changing the Theme (Default Slide Appearance)
 
-The default visual theme for all slides (e.g., background color, text color, title color, default footer text) is centralized in the `src/components/BaseSlide.jsx` component.
+The default visual theme for all slides (e.g., background color, text color, title color) is centralized in the `src/components/BaseSlide.jsx` component. The common footer content for all slides is defined in `src/components/Presentation.jsx` (see the `globalFooterContent` constant).
 
-To change the default theme:
+To change the default visual theme (excluding the footer content):
 
 1.  **Open `src/components/BaseSlide.jsx`**.
 2.  Locate the function signature for `BaseSlide`. You will see default props like:
@@ -126,7 +127,7 @@ To change the default theme:
     function BaseSlide({ 
       title, 
       children, 
-      footerContent = <p>© 2024 Presentation App</p>, // Default footer as JSX
+      footerContent = <p>© 2024 Presentation App</p>, // Default footer (now primarily a fallback, global footer is in Presentation.jsx)
       backgroundColor = "#121212", // Default dark background
       titleColor = "#ffffff",      // Default white title
       textColor = "#ffffff"        // Default white text
@@ -134,12 +135,15 @@ To change the default theme:
       // ...
     }
     ```
-3.  **Modify the default values** for these props. For instance, to change to a light theme by default and update the default footer content:
+3.  **Modify the default values** for props like `backgroundColor`, `titleColor`, and `textColor` in `BaseSlide.jsx`.
+    To customize the global footer content, edit the `globalFooterContent` constant in `src/components/Presentation.jsx`.
+
+    *Example of changing theme colors in `BaseSlide.jsx`:*
     ```javascript
     function BaseSlide({ 
       title, 
       children, 
-      footerContent = <p style={{ textAlign: 'center' }}>My Company Presentation © 2024</p>, // Example updated default footer
+      footerContent, // This will be provided by Presentation.jsx
       backgroundColor = "#F0F0F0", // Light gray background
       titleColor = "#333333",      // Dark text title
       textColor = "#555555"        // Dark gray text
@@ -147,22 +151,6 @@ To change the default theme:
       // ...
     }
     ```
-4.  The `baseSlideStyles` object within `BaseSlide.jsx` also defines structural styles (padding, borders). You can adjust these as well. For example, the border colors for the header and footer are conditionally set based on `backgroundColor`. You might need to adjust these conditional styles if you change the `backgroundColor` significantly.
-
-    ```javascript
-    // Example of conditional border in BaseSlide.jsx
-    header: {
-      // ...
-      borderBottom: `2px solid ${backgroundColor === "#121212" ? "#333" : "#e0e0e0"}`,
-      // ...
-    },
-    footer: {
-      // ...
-      color: backgroundColor === "#121212" ? "#aaa" : "#777",
-      // ...
-    }
-    ```
-    If you set a new default `backgroundColor` (e.g., `#F0F0F0`), you might update these conditions or simplify them if you only plan to use one theme.
 
 These changes in `BaseSlide.jsx` will apply to all slides by default, providing a unified look and feel.
 
