@@ -114,31 +114,6 @@ To add a new slide to your presentation, follow these steps:
 
     The application will automatically pick up the new slide, add it to the presentation flow, and list it in the sidebar.
 
-### Animating Slide Content
-
--   **CSS Animations**: You can add animations to elements within your slide components using CSS.
-    1.  Define your animation keyframes and classes in `src/styles.css`.
-        ```css
-        /* In src/styles.css */
-        .your-custom-animation-class {
-          animation: slideInFromLeft 1s ease-out forwards;
-          opacity: 0; /* Start hidden if needed */
-        }
-
-        @keyframes slideInFromLeft {
-          from {
-            transform: translateX(-50px);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        ```
-    2.  Apply the CSS class to the desired HTML element within your slide component's JSX (e.g., `<p className="your-custom-animation-class">Animated!</p>`).
--   **Inline Styles for Animation**: You can use inline `style` attributes for simple JavaScript-driven animation properties if needed, though CSS classes are generally preferred for animations.
-
 ### Changing the Theme (Default Slide Appearance)
 
 The default visual theme for all slides (e.g., background color, text color, title color, default footer text) is centralized in the `src/components/BaseSlide.jsx` component.
