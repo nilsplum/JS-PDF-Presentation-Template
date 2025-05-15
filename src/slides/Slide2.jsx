@@ -3,16 +3,16 @@ import React from 'react';
 function Slide2() {
   return (
     <>
-      <p style={{ marginTop: 0 }}>This application demonstrates several key concepts:</p>
-      <ul>
-        <li>React Components (Header, Footer, Slides)</li>
-        <li>Dynamic Component Loading using <code>import()</code></li>
-        <li>State Management (<code>useState</code>, <code>useEffect</code>)</li>
-        <li>CSS Styling and Simple Animations</li>
-        <li>Keyboard Navigation (Arrow Keys)</li>
-        <li>Client-side PDF Generation</li>
+      <p className="text-xl mt-0 mb-4">This application demonstrates several key concepts:</p>
+      <ul className="list-disc ml-6 mb-4 space-y-2">
+        <li className="text-base">React Components (Header, Footer, Slides)</li>
+        <li className="text-base">Dynamic Component Loading using <code className="bg-gray-800 text-gray-200 px-1 rounded">import()</code></li>
+        <li className="text-base">State Management (<code className="bg-gray-800 text-gray-200 px-1 rounded">useState</code>, <code className="bg-gray-800 text-gray-200 px-1 rounded">useEffect</code>)</li>
+        <li className="text-base">CSS Styling and Simple Animations</li>
+        <li className="text-base">Keyboard Navigation (Arrow Keys)</li>
+        <li className="text-base">Client-side PDF Generation</li>
       </ul>
-      <p style={{ marginBottom: 0 }}>The structure allows easy addition/removal of slides via <code>slidesConfig.js</code>.</p>
+      <p className="text-lg mb-0">The structure allows easy addition/removal of slides.</p>
     </>
   );
 }

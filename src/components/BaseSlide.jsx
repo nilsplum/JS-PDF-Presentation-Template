@@ -5,14 +5,12 @@ import React from 'react';
  * It provides consistent styling and structure while allowing individual
  * slides to focus only on their unique content.
  */
-function BaseSlide({ 
-  title, 
-  children, 
-  footerContent = (
-    <>
-      <p style={{ margin: 0, display: 'inline' }}>© 2024 Presentation App</p>
-    </>
-  ), 
+function BaseSlide({
+  title,
+  children,
+  currentSlideIndexActual, // New prop: 0-indexed current slide
+  totalSlides,             // New prop: total number of slides
+  footerText = "© 2024 Presentation App", // New prop for footer text
   backgroundColor = "#121212", // Dark background by default
   titleColor = "#ffffff", // White title by default
   textColor = "#ffffff" // White text by default
@@ -30,12 +28,18 @@ function BaseSlide({
       overflow: 'hidden', // Prevent any overflow
     },
     
-    // Header/title area
+    // Header/title area - modified for PDF compatibility
     header: {
       padding: '15px 20px',
       borderBottom: `2px solid ${backgroundColor === "#121212" ? "#333" : "#e0e0e0"}`,
-      flexShrink: 0, // Prevent the header from shrinking
-      position: 'relative', // Fixed position relative to container
+      width: '100%',
+      boxSizing: 'border-box',
+      height: '60px', // Fixed height for consistency
+      display: 'flex',
+      alignItems: 'center',
+      position: 'absolute', // Changed from relative to absolute
+      top: 0,
+      left: 0,
       zIndex: 2, // Ensure header is on top
     },
     
@@ -50,28 +54,36 @@ function BaseSlide({
     
     // Main content area where children will be rendered
     content: {
-      position: 'relative', // Fixed position for content
-      flex: 1, // Allows content to fill available space
-      padding: '50px', // Uniform padding around the content area
-      overflow: 'hidden', // Cut off content that exceeds dimensions
-      display: 'flex', // Added to help fixed-scale-content behave
-      flexDirection: 'column', // Added
-      minHeight: 0, // Important for flex children that might also scroll/overflow
-      // No flexible layout - content should scale as a whole
+      marginTop: '60px', // Match header height
+      marginBottom: '40px', // Match footer height
+      flex: 1,
+      padding: '50px',
+      position: 'relative', // Changed from relative
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: 0,
       zIndex: 1,
+      boxSizing: 'border-box',
+      height: 'calc(100% - 100px)', // 100px accounts for header (60px) + footer (40px)
     },
     
-    // Footer area
+    // Footer area - modified for PDF compatibility
     footer: {
+      width: '100%',
+      boxSizing: 'border-box',
       borderTop: `1px solid ${backgroundColor === "#121212" ? "#333" : "#e0e0e0"}`,
       padding: '8px 20px',
-      fontSize: '0.9rem', // Fixed size
+      fontSize: '0.9rem',
       color: backgroundColor === "#121212" ? "#aaa" : "#777",
-      // textAlign: 'center', // Removed to allow flexible content alignment
-      flexShrink: 0, // Prevent the footer from shrinking
-      position: 'relative', // Fixed position relative to container
-      zIndex: 2, // Ensure footer is on top
-      // Height will be determined by content
+      height: '40px', // Fixed height for consistency
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      position: 'absolute', // Changed from relative to absolute
+      bottom: 0,
+      left: 0,
+      zIndex: 2,
     }
   };
 
@@ -89,12 +101,15 @@ function BaseSlide({
         </div>
       </div>
       
-      {/* Slide Footer */}
-      {footerContent && ( // Conditionally render footer if content is provided
-        <div className="base-slide-footer" style={baseSlideStyles.footer}>
-          {footerContent}
-        </div>
-      )}
+      {/* Slide Footer - Unified structure */}
+      <div className="base-slide-footer" style={baseSlideStyles.footer}>
+        <span>{footerText}</span>
+        {typeof currentSlideIndexActual === 'number' && typeof totalSlides === 'number' && totalSlides > 0 && (
+          <span>
+            Slide {currentSlideIndexActual + 1} / {totalSlides}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

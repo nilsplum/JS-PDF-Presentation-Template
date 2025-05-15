@@ -12,27 +12,17 @@ const slidesData = [
   {
     title: 'Welcome to the Presentation',
     component: () => import('../slides/Slide1.jsx'),
-    // footerContent can be omitted to use BaseSlide's default
+    // footerContent can be omitted to use BaseSlide's default - Now removed entirely
   },
   {
     title: 'Core Features',
     component: () => import('../slides/Slide2.jsx'),
-    footerContent: <p style={{ fontSize: '0.8em', color: '#888' }}>Powered by React & jsPDF</p>
+    // footerContent: <p style={{ fontSize: '0.8em', color: '#888' }}>Powered by React & jsPDF</p> // Removed
   },
   {
     title: 'PDF Export Example',
     component: () => import('../slides/Slide3.jsx'),
-    footerContent: (
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-        <img src="https://via.placeholder.com/80x30.png?text=Logo" alt="Company Logo" style={{ height: '25px' }} />
-        <button 
-          onClick={() => alert('Footer Button Clicked!')} 
-          style={{ padding: '3px 8px', fontSize: '0.8em', backgroundColor: '#555', color: 'white', border: 'none', borderRadius: '3px' }}
-        >
-          Action
-        </button>
-      </div>
-    )
+    // footerContent: (...) // Complex footer removed
   }
 ];
 
@@ -160,11 +150,14 @@ function Presentation() {
         
         // Reset styles for PDF rendering
         slideElement.style.transform = 'none';
-        slideElement.style.position = 'static'; // Or 'relative' if 'static' breaks layout, but 'static' is usually best for html2canvas
+        slideElement.style.position = 'relative'; // Changed from 'static' to 'relative' to preserve absolute positioning in children
         slideElement.style.top = '0';
         slideElement.style.left = '0';
         slideElement.style.width = '1024px';
         slideElement.style.height = '576px';
+        
+        // Add overflow handling to ensure absolute elements remain within bounds
+        slideElement.style.overflow = 'hidden';
         
         if (i > 0) {
           console.log(`[PDF Generation] Adding a new page for slide ${i}. PDF will now have ${pdf.internal.getNumberOfPages() + 1} pages.`);
@@ -275,9 +268,12 @@ function Presentation() {
                     {index === currentSlideIndex && (
                       // BaseSlide now uses its internal defaults for styling props
                       // Only pass the specific title for this slide
+                      // Pass new props for unified footer
                       <BaseSlide
                         title={slideDisplayData.title || `Slide ${index + 1}`}
-                        footerContent={slideDisplayData.footerContent}
+                        // footerContent={slideDisplayData.footerContent} // Removed
+                        currentSlideIndexActual={index} // Pass 0-indexed slide number
+                        totalSlides={LoadedSlideComponents.length} // Pass total slides
                         // backgroundColor, titleColor, textColor are NOT passed
                         // They will come from BaseSlide's defaultProps
                       >

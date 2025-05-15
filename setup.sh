@@ -14,6 +14,7 @@ if ! command -v npm > /dev/null 2>&1; then
 fi
 
 echo "Installing dependencies using npm..."
+# This will install dependencies from package.json, including TailwindCSS if it's added there.
 npm install
 
 if [ $? -eq 0 ]; then
