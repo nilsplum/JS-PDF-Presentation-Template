@@ -12,15 +12,27 @@ const slidesData = [
   {
     title: 'Welcome to the Presentation',
     component: () => import('../slides/Slide1.jsx'),
-    // No styling props here, BaseSlide defaults will be used
+    // footerContent can be omitted to use BaseSlide's default
   },
   {
     title: 'Core Features',
     component: () => import('../slides/Slide2.jsx'),
+    footerContent: <p style={{ fontSize: '0.8em', color: '#888' }}>Powered by React & jsPDF</p>
   },
   {
     title: 'PDF Export Example',
     component: () => import('../slides/Slide3.jsx'),
+    footerContent: (
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+        <img src="https://via.placeholder.com/80x30.png?text=Logo" alt="Company Logo" style={{ height: '25px' }} />
+        <button 
+          onClick={() => alert('Footer Button Clicked!')} 
+          style={{ padding: '3px 8px', fontSize: '0.8em', backgroundColor: '#555', color: 'white', border: 'none', borderRadius: '3px' }}
+        >
+          Action
+        </button>
+      </div>
+    )
   }
 ];
 
@@ -122,35 +134,54 @@ function Presentation() {
       unit: 'px',
       format: [1024, 576]
     });
+    console.log('[PDF Generation] Initialized jsPDF. Document has 1 page by default.');
     try {
       const originalIndex = currentSlideIndex;
+      console.log(`[PDF Generation] Starting PDF generation. Number of slides to process: ${LoadedSlideComponents.length}`);
       for (let i = 0; i < LoadedSlideComponents.length; i++) {
+        console.log(`[PDF Generation] Processing slide ${i} of ${LoadedSlideComponents.length - 1}`);
         setCurrentSlideIndex(i);
-        await new Promise(resolve => setTimeout(resolve, 400)); 
+        // Add a slight delay to ensure the slide is rendered, especially if state updates are involved
+        await new Promise(resolve => setTimeout(resolve, 400)); // Keep existing delay
+
         const slideElement = document.getElementById(`slide-${i}`);
         if (!slideElement) {
-          console.error(`Slide element slide-${i} not found!`);
+          console.error(`[PDF Generation] Slide element slide-${i} not found! Skipping this slide.`);
           continue;
         }
+
+        // Store original styles to restore them later
         const originalTransform = slideElement.style.transform;
         const originalPosition = slideElement.style.position;
         const originalTop = slideElement.style.top;
         const originalLeft = slideElement.style.left;
         const originalWidth = slideElement.style.width;
         const originalHeight = slideElement.style.height;
+        
+        // Reset styles for PDF rendering
         slideElement.style.transform = 'none';
-        slideElement.style.position = 'static';
+        slideElement.style.position = 'static'; // Or 'relative' if 'static' breaks layout, but 'static' is usually best for html2canvas
         slideElement.style.top = '0';
         slideElement.style.left = '0';
         slideElement.style.width = '1024px';
         slideElement.style.height = '576px';
+        
         if (i > 0) {
+          console.log(`[PDF Generation] Adding a new page for slide ${i}. PDF will now have ${pdf.internal.getNumberOfPages() + 1} pages.`);
           pdf.addPage([1024, 576], 'landscape');
+        } else {
+          console.log(`[PDF Generation] Rendering slide ${i} on the first page.`);
         }
+
+        console.log(`[PDF Generation] Calling pdf.html() for slide ${i}. Target page number in PDF: ${pdf.internal.getCurrentPageInfo().pageNumber}`);
         await pdf.html(slideElement, {
           x: 0, y: 0, width: 1024, height: 576, 
           windowWidth: 1024, windowHeight: 576, autoPaging: false,
+          backgroundColor: '#121212' // Ensuring a consistent background
         });
+        console.log(`[PDF Generation] Finished pdf.html() for slide ${i}.`);
+
+        // Restore original styles
         slideElement.style.transform = originalTransform;
         slideElement.style.position = originalPosition;
         slideElement.style.top = originalTop;
@@ -158,8 +189,18 @@ function Presentation() {
         slideElement.style.width = originalWidth;
         slideElement.style.height = originalHeight;
       }
+      console.log('[PDF Generation] All slides processed. Saving PDF...');
+      
+      // Delete the first page before saving
+      if (pdf.internal.getNumberOfPages() > 0) {
+        pdf.deletePage(1);
+        console.log('[PDF Generation] Deleted the first page of the PDF.');
+      } else {
+        console.log('[PDF Generation] PDF has no pages, nothing to delete.');
+      }
+      
       pdf.save('presentation.pdf');
-      setCurrentSlideIndex(originalIndex);
+      setCurrentSlideIndex(originalIndex); // Restore the original slide view
     } catch (error) {
       console.error("Error generating PDF with jsPDF.html():", error);
       alert("Failed to generate PDF. The content might be too complex for the direct HTML renderer. Check console.");
@@ -236,7 +277,8 @@ function Presentation() {
                       // Only pass the specific title for this slide
                       <BaseSlide
                         title={slideDisplayData.title || `Slide ${index + 1}`}
-                        // footerText, backgroundColor, titleColor, textColor are NOT passed
+                        footerContent={slideDisplayData.footerContent}
+                        // backgroundColor, titleColor, textColor are NOT passed
                         // They will come from BaseSlide's defaultProps
                       >
                         <SlideComponent />

@@ -8,7 +8,11 @@ import React from 'react';
 function BaseSlide({ 
   title, 
   children, 
-  footerText = "© 2023 Presentation App", 
+  footerContent = (
+    <>
+      <p style={{ margin: 0, display: 'inline' }}>© 2024 Presentation App</p>
+    </>
+  ), 
   backgroundColor = "#121212", // Dark background by default
   titleColor = "#ffffff", // White title by default
   textColor = "#ffffff" // White text by default
@@ -47,9 +51,12 @@ function BaseSlide({
     // Main content area where children will be rendered
     content: {
       position: 'relative', // Fixed position for content
-      flex: 1,
-      padding: '0 20px 10px',
+      flex: 1, // Allows content to fill available space
+      padding: '50px', // Uniform padding around the content area
       overflow: 'hidden', // Cut off content that exceeds dimensions
+      display: 'flex', // Added to help fixed-scale-content behave
+      flexDirection: 'column', // Added
+      minHeight: 0, // Important for flex children that might also scroll/overflow
       // No flexible layout - content should scale as a whole
       zIndex: 1,
     },
@@ -60,10 +67,11 @@ function BaseSlide({
       padding: '8px 20px',
       fontSize: '0.9rem', // Fixed size
       color: backgroundColor === "#121212" ? "#aaa" : "#777",
-      textAlign: 'center',
+      // textAlign: 'center', // Removed to allow flexible content alignment
       flexShrink: 0, // Prevent the footer from shrinking
       position: 'relative', // Fixed position relative to container
       zIndex: 2, // Ensure footer is on top
+      // Height will be determined by content
     }
   };
 
@@ -82,9 +90,11 @@ function BaseSlide({
       </div>
       
       {/* Slide Footer */}
-      <div className="base-slide-footer" style={baseSlideStyles.footer}>
-        {footerText}
-      </div>
+      {footerContent && ( // Conditionally render footer if content is provided
+        <div className="base-slide-footer" style={baseSlideStyles.footer}>
+          {footerContent}
+        </div>
+      )}
     </div>
   );
 }

@@ -182,22 +182,7 @@ html, body, #root {
 }
 
 /* Simple fade-in animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1); }
-}
 
-/* Specific animation for Slide 1 */
-.slide1-fade-in-text {
-  animation: fadeInText 1s ease-in-out 0.5s forwards;
-  opacity: 0;
-  color: inherit; /* Ensure it inherits correct text color */
-}
-
-@keyframes fadeInText {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 /* Side Navigation Buttons */
 .slide-nav-button {
@@ -340,7 +325,6 @@ html, body, #root {
   /* Override aspect-ratio property */
   aspect-ratio: auto !important;
   /* Don't apply standard slide-active animations to the container */
-  animation: none !important;
 }
 
 /* Loading and error states */
@@ -426,10 +410,12 @@ html, body, #root {
 
 /* Override responsive behavior in slide content */
 .base-slide-content {
-  /* Fixed height for the content area */
-  height: calc(100% - 100px); /* Subtract approximate header/footer height */
-  min-height: var(--slide-min-height);
+  /* Fixed height for the content area - This is removed as height is now flexible due to flex:1 in BaseSlide inline styles and adaptive footer */
+  /* height: calc(100% - 100px); */ 
+  min-height: var(--slide-min-height); /* Keep a minimum height */
   overflow: hidden !important; /* Forcefully hide overflow */
+  /* Ensure it can flex if its parent (.base-slide) is a flex container, which it is. */
+  /* The inline styles in BaseSlide.jsx (flex: 1, display: flex, flexDirection: column, minHeight: 0) manage its flex behavior. */
 }
 
 /* Force slide-active to maintain strict dimensions */
@@ -448,11 +434,6 @@ html, body, #root {
   user-select: text;
 }
 
-/* Ensure animations don't cause layout shifts */
-@keyframes fadeInText {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 /* Force fixed sizes for specific elements */
 .fixed-scale-content h1 { font-size: 32px !important; line-height: 1.3 !important; }

@@ -50,6 +50,7 @@ To add a new slide to your presentation, follow these steps:
 1.  **Create the Slide Content Component:**
     Create a new `.jsx` file in the `src/slides/` directory (e.g., `src/slides/SlideNew.jsx`). This component should export a default React function that returns the HTML content for your slide.
     The content should be structured as if it's going into the main body of a slide; the title and footer are handled by the `BaseSlide` wrapper.
+    **Note on Spacing**: The `BaseSlide` component provides a default padding around the main content area. To ensure your slide content sits neatly within this padding without extra gaps, it's recommended to make the first root-level element in your slide component have `marginTop: 0` and the last root-level element have `marginBottom: 0` using inline styles. See the example below.
 
     *Example `src/slides/SlideNew.jsx`:*
     ```jsx
@@ -59,15 +60,15 @@ To add a new slide to your presentation, follow these steps:
     function SlideNew() {
       return (
         <>
-          <h3>This is the Sub-heading for My New Slide</h3>
+          <h3 style={{ marginTop: 0 }}>This is the Sub-heading for My New Slide</h3>
           <p>This is the first paragraph of my new slide. You can use standard HTML tags.</p>
           <ul>
             <li>Point one</li>
             <li>Point two</li>
           </ul>
-          <p>Another paragraph with <code>inline code</code> if needed.</p>
           {/* Add animations by applying CSS classes defined in styles.css */}
           <p className="your-custom-animation-class">Animated text!</p>
+          <p style={{ marginBottom: 0 }}>Another paragraph with <code>inline code</code> if needed.</p>
         </>
       );
     }
@@ -136,7 +137,7 @@ To add a new slide to your presentation, follow these steps:
         }
         ```
     2.  Apply the CSS class to the desired HTML element within your slide component's JSX (e.g., `<p className="your-custom-animation-class">Animated!</p>`).
--   **Inline Styles for Animation**: You can use inline `style` attributes for simple JavaScript-driven animation properties if needed, though CSS classes are generally preferred for animations. `Slide1.jsx` shows an example of using `animationDelay` via inline styles.
+-   **Inline Styles for Animation**: You can use inline `style` attributes for simple JavaScript-driven animation properties if needed, though CSS classes are generally preferred for animations.
 
 ### Changing the Theme (Default Slide Appearance)
 
@@ -150,7 +151,7 @@ To change the default theme:
     function BaseSlide({ 
       title, 
       children, 
-      footerText = "© 2023 Presentation App", 
+      footerContent = <p>© 2024 Presentation App</p>, // Default footer as JSX
       backgroundColor = "#121212", // Default dark background
       titleColor = "#ffffff",      // Default white title
       textColor = "#ffffff"        // Default white text
@@ -158,12 +159,12 @@ To change the default theme:
       // ...
     }
     ```
-3.  **Modify the default values** for these props. For instance, to change to a light theme by default:
+3.  **Modify the default values** for these props. For instance, to change to a light theme by default and update the default footer content:
     ```javascript
     function BaseSlide({ 
       title, 
       children, 
-      footerText = "My Company Presentation", 
+      footerContent = <p style={{ textAlign: 'center' }}>My Company Presentation © 2024</p>, // Example updated default footer
       backgroundColor = "#F0F0F0", // Light gray background
       titleColor = "#333333",      // Dark text title
       textColor = "#555555"        // Dark gray text
@@ -229,70 +230,3 @@ The presentation includes a "Download PDF" button. Here's how it works:
 -   `setup.sh`: Script to install dependencies.
 -   `start.sh`: Script to run the development server.
 -   `vite.config.js`: Vite configuration.
--   `README.md`: This file.
-
-## Project Structure
-
--   `/`: Root directory containing configuration (`package.json`, `vite.config.js`), startup scripts (`setup.sh`, `start.sh`), and the entry HTML (`index.html`).
--   `public/`: Static assets (if any).
--   `src/`: Contains the React application code.
-    -   `main.jsx`: The main entry point for the React application.
-    -   `App.jsx`: The root component, usually renders the `Presentation` component.
-    -   `index.css`: Minimal global styles/resets.
-    -   `styles.css`: Custom global styles for the presentation layout.
-    -   `components/`: Shared React components.
-        -   `Header.jsx`: The presentation header.
-        -   `Footer.jsx`: The presentation footer (with navigation and PDF download).
-        -   `Presentation.jsx`: The main container managing slide loading, state, and navigation.
-    -   `slides/`: Individual slide components.
-        -   `Slide1.jsx`, `Slide2.jsx`, etc.: Each file exports a React component representing a single slide.
-    -   `slidesConfig.js`: Configuration file listing the slides to include in the presentation and their metadata (like title).
-
-## How Slides Work
-
--   Each slide is a standard React component located in `src/slides/`.
--   A slide component should return JSX defining its content and structure (HTML, CSS classes).
--   You can include CSS or JavaScript-based animations directly within a slide component or use global styles.
--   The order and inclusion of slides are managed in `src/slidesConfig.js`.
-
-## Adding New Slides
-
-1.  **Create a new Slide Component:** Create a new file in `src/slides/`, for example, `SlideNew.jsx`.
-    ```jsx
-    // src/slides/SlideNew.jsx
-    import React from 'react';
-
-    function SlideNew() {
-      return (
-        <div>
-          <h2>My New Slide Title</h2>
-          <p>This is the content of the new slide.</p>
-        </div>
-      );
-    }
-
-    export default SlideNew;
-    ```
-2.  **Update Configuration:** Open `src/slidesConfig.js` and add an entry for your new slide, including its title and a dynamic import for the component.
-    ```javascript
-    // src/slidesConfig.js
-    const slides = [
-      // ... existing slides ...
-      {
-        title: 'New Slide Title',
-        // Use dynamic import to load the component only when needed
-        component: () => import('./slides/SlideNew.jsx')
-      }
-    ];
-
-    export default slides;
-    ```
-
-The `Presentation` component will automatically pick up the new slide from the configuration.
-
-## PDF Download
-
--   Click the "Download PDF" button in the footer.
--   The application uses `html2canvas` to capture an image of each slide and `jspdf` to compile these images into a single multi-page PDF.
--   The PDF will be named `presentation.pdf` and should start downloading automatically.
--   Note: PDF generation happens entirely in the browser. Complex CSS or animations might not render perfectly in the PDF. 
