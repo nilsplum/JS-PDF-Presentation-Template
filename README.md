@@ -114,6 +114,20 @@ To add a new slide to your presentation, follow these steps:
 
     The application will automatically pick up the new slide, add it to the presentation flow, and list it in the sidebar.
 
+## Styling Slide Content
+
+To ensure consistent and predictable styling of the content within your slides (e.g., text, images inside `Slide1.jsx`), please adhere to the following guidelines:
+
+1.  **Primary Styling in Slide Components:** Define styles for content elements (headings, paragraphs, lists, etc.) directly within the respective slide component (e.g., `src/slides/Slide1.jsx`). Inline styles are suitable for most cases:
+    ```jsx
+    <p style={{ fontSize: '16px', color: '#333' }}>Styled text.</p>
+    ```
+2.  **Font Sizing:** Use `px`, `em`, or `rem` for font sizes within slide content. These units scale correctly with the slide's overall resizing. Avoid `vw` or `vh` for fonts *inside* slides, as this can lead to unpredictable text scaling.
+3.  **`BaseSlide` for Defaults:** The `BaseSlide` component (`src/components/BaseSlide.jsx`) provides props like `backgroundColor`, `titleColor`, and `textColor` to set the default theme for a slide. Content elements inherit these unless you provide a more specific style.
+4.  **`styles.css` Scope:** The main `src/styles.css` file is primarily for global application layout (sidebar, header, footer), the styling of slide *containers* (how the slide itself is positioned, sized, and animated), and not for specific content elements *within* slides. Avoid adding generic content styling (e.g., `p { color: blue; }`) there to prevent conflicts.
+
+By following this approach, your slide content styling will be self-contained and easier to manage, working harmoniously with the presentation's scaling mechanism.
+
 ### Changing the Theme (Default Slide Appearance)
 
 The default visual theme for all slides (e.g., background color, text color, title color, default footer text) is centralized in the `src/components/BaseSlide.jsx` component.

@@ -166,23 +166,6 @@ html, body, #root {
   }
 }
 
-.slide-active h1, .slide-active h2, .slide-active h3 {
-  margin-top: 0;
-  margin-bottom: 0.8em;
-  color: #0056b3;
-}
-
-.slide-active p {
-    margin-bottom: 1em;
-}
-
-.slide-active ul, .slide-active ol {
-    margin-left: 20px;
-    margin-bottom: 1em;
-}
-
-/* Simple fade-in animation */
-
 
 /* Side Navigation Buttons */
 .slide-nav-button {
@@ -247,63 +230,17 @@ html, body, #root {
 
 /* Add this after the existing styles to support BaseSlide */
 
-/* Base Slide Styles */
-.base-slide {
-  width: 100%;
-  height: 100%;
-  border-radius: 0; /* Removed rounded corners */
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  /* Ensure content scales with the slide */
-  display: flex;
-  flex-direction: column;
-}
 
-.base-slide-header {
-  /* Styles will be set inline in the component */
-}
 
-.base-slide-content {
-  /* Styles will be set inline in the component */
-  min-height: 0; /* Important for a flex child that needs to be scrollable */
-  line-height: 1.6;
-  color: inherit; /* Inherit the text color from parent */
-}
-
-.base-slide-content p, 
-.base-slide-content ul, 
-.base-slide-content ol {
-  line-height: 1.6;
-  color: inherit; /* Inherit the text color from parent */
-}
-
-.base-slide-content a {
-  color: #4dacff; /* Bright blue links for dark background */
-  text-decoration: none;
-}
-
-.base-slide-content a:hover {
-  text-decoration: underline;
-}
 
 /* Make code snippets stand out on dark background */
-.base-slide-content code {
-  background-color: #2d2d2d;
-  padding: 2px 5px;
-  border-radius: 3px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.9em;
-  color: #f8f8f8;
-}
 
 /* Update selection styles */
 ::selection {
   background-color: #375a7f; /* Dark blue selection */
   color: white;
-}
-
-.base-slide-footer {
-  /* Styles will be set inline in the component */
+  /* Disable text wrapping where not explicitly intended */
+  white-space: pre-wrap;
 }
 
 /* New container to better handle slide scaling */
@@ -341,35 +278,12 @@ html, body, #root {
   color: #ff6b6b;
 }
 
-/* Inactive slide styling */
-.slide-inactive {
-  display: none; /* Belt and suspenders with the inline style */
-}
 
 /* Ensure the slide navigation buttons stay on top */
 .slide-nav-button {
   z-index: 20; /* Higher z-index to stay above slides */
 }
 
-/* Responsive scaling for smaller screens */
-@media (max-width: 768px) {
-  .slide-active {
-    max-width: 95%; /* Allow slightly more width on smaller screens */
-  }
-  
-  .slide-nav-button {
-    padding: 10px 8px; /* Smaller buttons on mobile */
-    font-size: 1.2em;
-  }
-  
-  .slide-nav-prev {
-    left: 5px;
-  }
-  
-  .slide-nav-next {
-    right: 5px;
-  }
-}
 
 /* Fixed Scale Content Styles */
 .fixed-scale-content {
@@ -387,15 +301,6 @@ html, body, #root {
   --ref-height: 576px;
 }
 
-/* Non-responsive content behavior */
-.fixed-scale-content * {
-  position: relative; /* All elements positioned relative to their normal position */
-  /* Disable responsive font sizing */
-  font-size: inherit !important;
-  line-height: inherit !important;
-  /* Disable text wrapping where not explicitly intended */
-  white-space: pre-wrap;
-}
 
 /* Ensure the base slide maintains fixed proportions */
 .base-slide {
@@ -436,12 +341,12 @@ html, body, #root {
 
 
 /* Force fixed sizes for specific elements */
-.fixed-scale-content h1 { font-size: 32px !important; line-height: 1.3 !important; }
-.fixed-scale-content h2 { font-size: 28px !important; line-height: 1.3 !important; }
-.fixed-scale-content h3 { font-size: 24px !important; line-height: 1.3 !important; }
-.fixed-scale-content p { font-size: 18px !important; line-height: 1.5 !important; }
-.fixed-scale-content li { font-size: 18px !important; line-height: 1.5 !important; }
-.fixed-scale-content code { font-size: 16px !important; }
+/* .fixed-scale-content h1 { font-size: 32px !important; line-height: 1.3 !important; } */
+/* .fixed-scale-content h2 { font-size: 28px !important; line-height: 1.3 !important; } */
+/* .fixed-scale-content h3 { font-size: 24px !important; line-height: 1.3 !important; } */
+/* .fixed-scale-content p { font-size: 18px !important; line-height: 1.5 !important; } */
+/* .fixed-scale-content li { font-size: 18px !important; line-height: 1.5 !important; } */
+/* .fixed-scale-content code { font-size: 16px !important; } */
 
 /* For small screens, ensure minimum spacing */
 @media (max-height: 600px) {
